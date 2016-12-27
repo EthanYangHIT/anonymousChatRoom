@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>WebSocket on Node</title>
+</head>
+<style>
+    #content {
+        overflow-y: auto;
+        height: 600px;
+        border: 1px solid darkgray;
+        padding: 10px;
+        margin-bottom: 10px;
+    }
+</style>
+<body>
+<p>
+    This is a simple chat program based on webSocket and node server<br/>
+</p>
+<div id="content"></div>
+<input id="input"/>
+<button id="send">Send</button>
+</body>
+<script>
+    var content = document.getElementById('content');
+    var input = document.getElementById('input');
+    var send = document.getElementById('send');
+    var socket = new WebSocket('ws://localhost:1337');
+    socket.onopen = function () {
+        content.innerHTML += 'connection established, you can chat now.' + '<br/>';
+        socket.send('hello');
+    }
+    socket.onmessage = function (message) {
+        content.innerHTML += message.data + '<br/>';
+    }
+    socket.onerror = function (error) {
+        console.log('webSocket error: ' + error);
+    }
+    send.addEventListener('click', function () {
+        console.log(input.value);
+        socket.send(input.value);
+        content.innerHTML += 'me : ' + input.value + '<br/>';
+        input.value = '';
+        input.focus();
+    })
+</script>
+</html>
